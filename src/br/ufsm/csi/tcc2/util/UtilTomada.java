@@ -8,6 +8,7 @@ import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.spatial.pfunction.library.SouthPF;
 import org.apache.jena.rdf.model.RDFNode;
 
 import java.io.IOException;
@@ -65,10 +66,11 @@ public class UtilTomada {
         String urlAtuador = consultaSPARQLAtuador(sparql, tomada.getUriEndPoint());
         atuador.setUriEndPoint( urlAtuador );
         tomada.setAtuador(atuador);
+        System.out.println(" >>> Atuador reconhecido: " + tomada.getAtuador().getUriEndPoint() + " <<< ");
     }
 
     public static void reconheceSensores(Tomada tomada) {
-        System.out.println(" >>> Reconhecendo sensores <<< ");
+        System.out.println(" >>> Reconhecendo sensores <<<");
         String sparql = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
                 "PREFIX iot-lite: <http://purl.oclc.org/NET/UNIS/fiware/iot-lite#>\n" +
                 "PREFIX ssn: <http://purl.oclc.org/NET/ssnx/ssn#>\n" +
@@ -81,11 +83,15 @@ public class UtilTomada {
                 "  \t\t\t?servicos iot-lite:endpoint ?urlEndPoint.\n" +
                 "       }";
         Collection<Sensor> sensoresRecuperados = consultaSPARQLSensores( sparql, tomada.getUriEndPoint());
-        System.out.println(" >>> Sensores recuperados: " + sensoresRecuperados + " <<< ");
         tomada.setSensores(sensoresRecuperados);
+        System.out.println(" >>> Sensores recuperados: ");
+        for(Sensor sensor : tomada.getSensores()){
+            System.out.println("\t - ID: " + sensor.getId() + " URI: " + sensor.getUriEndPoint());
+        }
+        System.out.println(" <<< ");
     }
 
-    public static void atualizarSensores(Tomada tomada) {
+    public static void consultarSensores(Tomada tomada) {
         System.out.println(" >>> Atualizando sensores <<< ");
         for(Sensor sensor : tomada.getSensores()){
             String sparql = "prefix ontology: <http://www.loa.istc.cnr.it/ontologies/DUL.owl#>\n" +

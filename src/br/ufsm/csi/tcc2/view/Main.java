@@ -23,7 +23,7 @@ public class Main {
         while (true){
 
             // Pesquisar dados dos sensores nos seus endpoints
-            atualizarSensores(tomada);
+            consultarSensores(tomada);
 
             // Testar se estado é "Ligada"
             if(tomada.isLigada()){
